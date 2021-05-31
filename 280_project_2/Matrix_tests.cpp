@@ -34,7 +34,6 @@ TEST(test_fill_basic) {
 // ADD YOUR TESTS HERE
 // You are encouraged to use any functions from Matrix_test_helpers.h as needed.
 
-
 // NOTE: The unit test framework tutorial in Lab 2 originally
 // had a semicolon after TEST_MAIN(). Although including and
 // excluding the semicolon are both correct according to the c++
