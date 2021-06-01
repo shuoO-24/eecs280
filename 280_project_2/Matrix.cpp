@@ -31,7 +31,7 @@ void Matrix_print(const Matrix* mat, std::ostream& os) {
 
   int matrix_size = Matrix_height(mat) * Matrix_width(mat);
 
-  const int* ptr = mat->data;
+  const int* ptr = Matrix_at(mat, 0, 0);
 
   os << Matrix_width(mat) << " " << Matrix_height(mat);
 
@@ -51,10 +51,11 @@ void Matrix_print(const Matrix* mat, std::ostream& os) {
 
     }
 
-    os << "\n";
-
     ++ptr;
   }
+
+  os << "\n";
+
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -154,7 +155,7 @@ void Matrix_fill(Matrix* mat, int value) {
 
   int matrix_size = Matrix_height(mat) * Matrix_width(mat);
   
-  int* ptr = mat->data;
+  int* ptr = Matrix_at(mat, 0, 0);
 
   for (int i=0; i < matrix_size; ++i) {
 
@@ -173,7 +174,7 @@ void Matrix_fill(Matrix* mat, int value) {
 void Matrix_fill_border(Matrix* mat, int value) {
 
   int matrix_size = Matrix_height(mat) * Matrix_width(mat);
-  int* ptr = mat->data;
+  int* ptr = Matrix_at(mat, 0, 0);
 
   for(size_t i = 0; i < matrix_size; ++i) {
 
@@ -196,9 +197,8 @@ void Matrix_fill_border(Matrix* mat, int value) {
 int Matrix_max(const Matrix* mat) {
 
   int matrix_size = Matrix_height(mat) * Matrix_width(mat);
-  
-  const int* ptr = mat->data;
-  int max_element = *(mat->data);
+  const int* ptr = Matrix_at(mat, 0, 0);
+  int max_element = *ptr;
 
   for(size_t i = 0; i < matrix_size; ++i) {
 
@@ -240,7 +240,7 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
   int index_end = (row * Matrix_width(mat)) + column_end;
   int i = index_start;
 
-  const int *ptr = mat->data;
+  const int* ptr = Matrix_at(mat, 0, 0);
   ptr += index_start;
   int min_element_in_row = *ptr;
   int column_of_min_element_in_row = column_start;
@@ -285,7 +285,7 @@ int Matrix_min_value_in_row(const Matrix* mat, int row,
   int index_end = (row * Matrix_width(mat)) + column_end;
   int i = index_start;
 
-  const int *ptr = mat->data;
+  const int* ptr = Matrix_at(mat, 0, 0);
   ptr += index_start;
   int min_element_in_row = *ptr;
 
