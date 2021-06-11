@@ -149,16 +149,19 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
 
   */
 
-  Matrix_init(cost, Matrix_width(energy), Matrix_height(energy));
+  int width = Matrix_width(energy);
+  int height = Matrix_height(energy);
+  
+  Matrix_init(cost, width, height);
 
-  for (size_t c = 0; c < Matrix_width(cost); ++c) {
+  for (size_t c = 0; c < width; ++c) {
     
     *Matrix_at(cost, 0, c) = *Matrix_at(energy, 0, c);
 
   }
 
-  for (size_t row = 1; row < Matrix_height(cost); ++row) {
-    for(size_t col = 0; col < Matrix_width(cost); ++col) {
+  for (size_t row = 1; row < height; ++row) {
+    for(size_t col = 0; col < width; ++col) {
 
       int start_index;
       int end_index;
@@ -174,7 +177,7 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
 
       }
 
-      if (col < Matrix_width(cost) - 1) {
+      if (col < width - 1) {
 
         // top right pixel in inbounds
         end_index = col + 2;
@@ -276,7 +279,7 @@ void remove_vertical_seam(Image *img, const int seam[]) {
   for(size_t row = 0; row < height; ++row) {
     
     int col_to_remove = seam[row];
-    assert(0 <= col_to_remove && col_to_remove < Image_width(img));
+    assert(0 <= col_to_remove && col_to_remove < width);
 
     for (size_t col = 0; col < width; ++col) {
 
