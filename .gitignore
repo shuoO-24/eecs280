@@ -41,3 +41,5 @@ Temporary Items
 
 # Executable files
 *.exe
+*.ppm
+*.txt

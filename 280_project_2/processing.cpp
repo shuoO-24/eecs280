@@ -100,12 +100,15 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
 
   */
 
-  Matrix_init(energy, Image_width(img), Image_height(img));
+  int width = Image_width(img);
+  int height = Image_height(img);
+  
+  Matrix_init(energy, width, height);
   Matrix_fill(energy, 0);
 
-  for(size_t r = 1; r < Matrix_width(energy) - 1; ++r) {
-    for(size_t c = 1; c < Matrix_height(energy) - 1; ++c) {
-
+  for(size_t r = 1; r < height - 1; ++r) {
+    for(size_t c = 1; c < width - 1; ++c) {
+      
       Pixel north = Image_get_pixel(img, r-1, c);
       Pixel south = Image_get_pixel(img, r+1, c);
       Pixel west = Image_get_pixel(img, r, c-1);
@@ -183,7 +186,7 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
       }
 
       // Recurrence relation
-      *Matrix_at(cost, row, col) = *Matrix_at(energy, row, col) + Matrix_min_value_in_row(cost, row, start_index, end_index);
+      *Matrix_at(cost, row, col) = *Matrix_at(energy, row, col) + Matrix_min_value_in_row(cost, row - 1, start_index, end_index);
 
     }
   }
@@ -210,11 +213,14 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
   int start_index;
   int end_index;
 
-  // Minimum cost pixel in the bottom row
-  int col = Matrix_column_of_min_value_in_row(cost, Matrix_height(cost) - 1, 0, Matrix_width(cost));
-  seam[Matrix_height(cost) - 1] = col;
+  int height = Matrix_height(cost);
+  int width = Matrix_width(cost);
 
-  for(size_t row = Matrix_height(cost) - 2; row > 0; --row) {
+  // Minimum cost pixel in the bottom row
+  int col = Matrix_column_of_min_value_in_row(cost, height - 1, 0, width);
+  seam[height - 1] = col;
+
+  for(int row = height - 2; row >= 0; --row) {
 
     if (col > 0) {
 
@@ -227,7 +233,7 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
 
     }
 
-    if (col < Matrix_width(cost) - 1) {
+    if (col < width - 1) {
 
       // top right pixel in inbounds
       end_index = col + 2;
@@ -332,6 +338,8 @@ void seam_carve_width(Image *img, int newWidth) {
     compute_vertical_cost_matrix(energy, cost);
     find_minimal_vertical_seam(cost, seam);
     remove_vertical_seam(img, seam);
+
+    width = Image_width(img);
 
     delete energy;
     delete cost;
